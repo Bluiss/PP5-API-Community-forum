@@ -38,7 +38,8 @@ SECRET_KEY = 'django-insecure-^7gox-=(#!m+$t3_^q1&t=o=22at^=6q(v_3x2rl9z3__7*k($
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '8000-bluiss-pp5apicommunityf-dnnpp9eijo3.ws-eu114.gitpod.io'
+    '8000-bluiss-pp5apicommunityf-dnnpp9eijo3.ws-eu114.gitpod.io',
+    '8080-bluiss-pp5apicommunityf-dnnpp9eijo3.ws-eu114.gitpod.io'
 ]
 
 
