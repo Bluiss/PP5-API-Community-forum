@@ -15,7 +15,8 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to='images/', default='../default_post_rgq6aq', blank=True
     )
-    channel_id = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name='posts')
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name='posts')
+
 
     class Meta:
         ordering = ['-created_at']
