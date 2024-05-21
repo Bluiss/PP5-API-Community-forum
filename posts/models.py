@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from channels.models import Channel
 
 
 class Post(models.Model):
