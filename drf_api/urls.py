@@ -22,5 +22,7 @@ urlpatterns = [
     path('', include('profiles.urls')),
     path('', include('posts.urls')),
     path('', include('channels.urls')),
+    path('', include('comments.urls')),
+
 
 ]
