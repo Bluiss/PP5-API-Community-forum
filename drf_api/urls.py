@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('posts.urls')),
     path('', include('channels.urls')),
     path('', include('comments.urls')),
+    path('', include('likes.urls')),
 
 
 ]
