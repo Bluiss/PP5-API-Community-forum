@@ -24,6 +24,10 @@ urlpatterns = [
     path('', include('channels.urls')),
     path('', include('comments.urls')),
     path('', include('likes.urls')),
+    path('', include('followers.urls')),
+    path('', include('channel_followers.urls')),
+
+
 
 
 ]

@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'channels',
     'comments',
     'likes',
+    'followers',
+    'channel_followers',
 ]
 
 
