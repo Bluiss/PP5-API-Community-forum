@@ -30,3 +30,10 @@ class ChannelList(APIView):
         return Response(
             serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )
+
+
+class ChannelDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ChannelSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly
+    ]
