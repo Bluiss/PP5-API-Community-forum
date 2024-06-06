@@ -1,4 +1,4 @@
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Channel
@@ -33,7 +33,9 @@ class ChannelList(APIView):
 
 
 class ChannelDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly
     ]
+    lookup_field = 'pk'
