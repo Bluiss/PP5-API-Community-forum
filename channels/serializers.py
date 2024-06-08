@@ -13,8 +13,8 @@ class ChannelSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
-    posts = PostSerializer(many=True, read_only=True)  # Include the related posts
-
+    posts = PostSerializer(many=True, read_only=True) 
+    
     def get_is_owner(self, obj):
         request = self.context['request']
         return request.user == obj.owner
@@ -29,5 +29,5 @@ class ChannelSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'description', 'image',
             'is_owner', 'profile_image', 'owner', 'profile_id',
-            'posts'  
+            'posts' ,'followers_count'
             ]
