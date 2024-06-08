@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Channel
 from .serializers import ChannelSerializer
+from rest_framework.filters import OrderingFilter
+
 
 
 class ChannelList(APIView):
@@ -44,3 +46,5 @@ class ChannelDetail(generics.RetrieveUpdateDestroyAPIView):
 class ChannelViewSet(viewsets.ModelViewSet):
     queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['followers_count']  # Ensure this field is included for ordering
