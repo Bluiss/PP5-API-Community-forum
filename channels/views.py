@@ -48,3 +48,7 @@ class ChannelViewSet(viewsets.ModelViewSet):
     serializer_class = ChannelSerializer
     filter_backends = [OrderingFilter]
     ordering_fields = ['followers_count']  # Ensure this field is included for ordering
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.order_by(self.request.query_params.get('ordering', '-created_at'))
