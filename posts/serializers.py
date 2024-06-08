@@ -45,10 +45,5 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = [
-            'id', 'owner', 'is_owner', 'profile_id',
-            'profile_image', 'created_at', 'updated_at',
-            'title', 'content', 'image', 'channel_title',
-            'channel_display_title', 'image_filter', 'like_id', 
-            'likes_count', 'comments_count',
-        ]
+        fields = '__all__' 
+

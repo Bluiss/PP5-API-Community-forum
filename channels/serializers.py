@@ -1,11 +1,19 @@
 from rest_framework import serializers
 from channels.models import Channel
+from posts.models import Post
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'content', 'image', 'created_at', 'updated_at', 'channel']
+
 
 class ChannelSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
+    posts = PostSerializer(many=True, read_only=True)  
 
     def get_is_owner(self, obj):
         request = self.context['request']
