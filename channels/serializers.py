@@ -5,7 +5,7 @@ from posts.models import Post
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'image', 'created_at', 'updated_at', 'channel','followers_count']
+        fields = ['id', 'title', 'content', 'image', 'created_at', 'updated_at', 'channel', 'followers_count']
 
 
 class ChannelSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class ChannelSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
-    posts = PostSerializer(many=True, read_only=True)  
+    posts = PostSerializer(many=True, read_only=True)  # Include the related posts
 
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -26,7 +26,8 @@ class ChannelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Channel
-        fields = [ 
+        fields = [
             'id', 'title', 'description', 'image',
-            'is_owner', 'profile_image', 'owner', 'profile_id'
-        ]
+            'is_owner', 'profile_image', 'owner', 'profile_id',
+            'posts'  
+            ]
