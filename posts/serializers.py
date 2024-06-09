@@ -2,12 +2,13 @@ from rest_framework import serializers
 from posts.models import Post, Channel
 from likes.models import Like
 
+
 class PostSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
-    channel_title = serializers.CharField(write_only=True)
+    channel = serializers.PrimaryKeyRelatedField(queryset=Channel.objects.all()) 
     channel_display_title = serializers.ReadOnlyField(source='channel.title')
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.ReadOnlyField()
@@ -34,16 +35,11 @@ class PostSerializer(serializers.ModelSerializer):
         return None
 
     def create(self, validated_data):
-        channel_title = validated_data.pop('channel_title')
-        try:
-            channel = Channel.objects.get(title=channel_title)
-        except Channel.DoesNotExist:
-            raise serializers.ValidationError({'channel': 'Channel not found.'})
-        validated_data['channel'] = channel
         post = Post.objects.create(**validated_data)
         return post
 
     class Meta:
         model = Post
-        fields = '__all__' 
+        fields = '__all__'
+
 
