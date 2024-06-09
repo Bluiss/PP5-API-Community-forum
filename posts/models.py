@@ -29,6 +29,8 @@ class Post(models.Model):
     image_filter = models.CharField(
         max_length=32, choices=image_filter_choices, default='nomral'
     )
+    followers_count = models.IntegerField(default=0)  # Add the missing field
+
 
 
     class Meta:
