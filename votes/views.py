@@ -1,8 +1,14 @@
+# votes/views.py
+
+import logging
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Vote
 from .serializers import VoteSerializer
+from posts.models import Post
+
+logger = logging.getLogger(__name__)
 
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
@@ -12,18 +18,36 @@ class VoteViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         user = request.user
-        post = Post.objects.get(id=data['post'])
-        vote_type = data['vote_type']
+        
+        logger.debug(f"Received vote request data: {data}")
 
-        vote, created = Vote.objects.update_or_create(
-            user=user,
-            post=post,
-            defaults={'vote_type': vote_type}
-        )
+        try:
+            post = Post.objects.get(id=data['post'])
+        except Post.DoesNotExist:
+            logger.error(f"Post not found with ID: {data['post']}")
+            return Response({"detail": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Recalculate the vote count for the post
-        post.vote_count = post.votes.aggregate(models.Sum('vote_type'))['vote_type__sum'] or 0
-        post.save()
+        vote_type = data.get('vote_type')
+        if vote_type not in [1, -1]:
+            logger.error(f"Invalid vote type: {vote_type}")
+            return Response({"detail": "Invalid vote type."}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(vote)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        try:
+            vote, created = Vote.objects.update_or_create(
+                user=user,
+                post=post,
+                defaults={'vote_type': vote_type}
+            )
+
+            # Update the post's vote count
+            post_vote_count = post.votes.aggregate(total=models.Sum('vote_type'))['total'] or 0
+            post.vote_count = post_vote_count
+            post.save()
+
+            serializer = self.get_serializer(vote)
+            logger.debug(f"Vote created or updated successfully: {serializer.data}")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        except Exception as e:
+            logger.error(f"Error processing vote: {e}")
+            return Response({"detail": "An error occurred while processing your request."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
