@@ -1,9 +1,8 @@
-# votes/views.py
-
 import logging
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.db import models  
 from .models import Vote
 from .serializers import VoteSerializer
 from posts.models import Post
