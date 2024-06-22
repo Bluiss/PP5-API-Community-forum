@@ -11,12 +11,11 @@ class PostList(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
-    # Annotate the queryset with likes_count, comments_count, and vote_count
     queryset = Post.objects.annotate(
         likes_count=Count('likes', distinct=True),
         comments_count=Count('comment', distinct=True),
-        total_vote_count=Sum(F('votes__vote_type'), distinct=True)  # Using a different name for the annotation
-    ).order_by('-created_at')  # Default ordering
+        total_vote_count=Sum(F('votes__vote_type'), distinct=True)
+    ).order_by('-created_at')
 
     filter_backends = [
         filters.OrderingFilter,
@@ -24,12 +23,12 @@ class PostList(generics.ListCreateAPIView):
         DjangoFilterBackend,
     ]
     
-    filterset_fields = [
-        'owner__followed__owner__profile',  # To filter posts by profiles followed by the user
-        'likes__owner__profile',  # To filter posts liked by a profile
-        'owner__profile',  # To filter posts by the owner’s profile
-        'channel',  # To filter posts by channel
-    ]
+    filterset_fields = {
+        'owner__followed__owner__profile': ['exact'],  
+        'likes__owner__profile': ['exact'],  
+        'owner__profile': ['exact'],  
+        'channel__title': ['exact'],  # Use channel__title to filter by channel title
+    }
     
     search_fields = [
         'owner__username',
@@ -38,11 +37,11 @@ class PostList(generics.ListCreateAPIView):
     ]
     
     ordering_fields = [
-        'created_at',  # Sorting by the creation date
-        'likes_count',  # Sorting by the number of likes
-        'comments_count',  # Sorting by the number of comments
-        'vote_count',  # Sorting by the vote count
-        'updated_at',  # Sorting by the last update date
+        'created_at',
+        'likes_count',
+        'comments_count',
+        'total_vote_count',  # Use total_vote_count here
+        'updated_at',
     ]
 
     def perform_create(self, serializer):
