@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from channels.models import Channel
+from votes.models import Vote
 
 
 class Post(models.Model):
@@ -29,7 +30,8 @@ class Post(models.Model):
     image_filter = models.CharField(
         max_length=32, choices=image_filter_choices, default='nomral'
     )
-    followers_count = models.IntegerField(default=0)  # Add the missing field
+    followers_count = models.IntegerField(default=0)  
+    vote_count = models.IntegerField(default=0)
 
 
 
