@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from .models import Channel
 from .serializers import ChannelSerializer
 from rest_framework.filters import OrderingFilter
+import logging
 
 class ChannelList(APIView):
     serializer_class = ChannelSerializer
@@ -37,8 +38,11 @@ class ChannelViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         return queryset.order_by(self.request.query_params.get('ordering', '-created_at'))
 
+logger = logging.getLogger(__name__)
+
 class ChannelDetailByTitle(generics.RetrieveAPIView):
     serializer_class = ChannelSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_object(self):
         title = self.kwargs.get("title")
@@ -50,4 +54,7 @@ class ChannelDetailByTitle(generics.RetrieveAPIView):
         except Channel.DoesNotExist:
             logger.error(f'Channel with title "{title}" not found.')
             raise Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.error(f'An error occurred: {e}')
+            raise Response({"detail": "Server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
