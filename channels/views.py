@@ -60,3 +60,12 @@ class ChannelDetailByTitle(generics.RetrieveAPIView):
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         logger.error(f'An error occurred while retrieving channel by title: {exc}')
         return Response({"detail": "Server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class FollowedChannelsView(generics.ListAPIView):
+    serializer_class = ChannelSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Channel.objects.filter(followers__owner=user)
