@@ -17,7 +17,6 @@ class Channel(models.Model):
     image = models.ImageField(
         upload_to='images/', default='../default_post_rgq6aq', blank=True
     )
-    followers_count = models.IntegerField(default=0) 
 
     
 
