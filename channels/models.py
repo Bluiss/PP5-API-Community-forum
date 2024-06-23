@@ -18,7 +18,9 @@ class Channel(models.Model):
         upload_to='images/', default='../default_post_rgq6aq', blank=True
     )
 
-    
+    @property
+    def followers_count(self):
+        return ChannelFollower.objects.filter(channel=self).count()
 
 
     class Meta:

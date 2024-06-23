@@ -1,11 +1,14 @@
 from rest_framework import status, permissions, generics, viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly  # Add this line
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from .models import Channel
 from .serializers import ChannelSerializer
 from rest_framework.filters import OrderingFilter
 import logging
+from django.shortcuts import get_object_or_404
+
+logger = logging.getLogger(__name__)
 
 class ChannelList(APIView):
     serializer_class = ChannelSerializer
@@ -21,6 +24,7 @@ class ChannelList(APIView):
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        logger.error(f'Error creating channel: {serializer.errors}')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ChannelDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -39,8 +43,6 @@ class ChannelViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         return queryset.order_by(self.request.query_params.get('ordering', '-created_at'))
 
-logger = logging.getLogger(__name__)
-
 class ChannelDetailByTitle(generics.RetrieveAPIView):
     serializer_class = ChannelSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -48,13 +50,13 @@ class ChannelDetailByTitle(generics.RetrieveAPIView):
     def get_object(self):
         title = self.kwargs.get("title")
         logger.debug(f'Received request for channel title: {title}')
-        try:
-            channel = Channel.objects.get(title=title)
-            logger.debug(f'Found channel: {channel}')
-            return channel
-        except Channel.DoesNotExist:
-            logger.error(f'Channel with title "{title}" not found.')
-            raise Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            logger.error(f'An error occurred while retrieving channel by title: {e}')
-            raise Response({"detail": "Server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        channel = get_object_or_404(Channel, title=title)
+        logger.debug(f'Found channel: {channel}')
+        return channel
+
+    def handle_exception(self, exc):
+        if isinstance(exc, Channel.DoesNotExist):
+            logger.error(f'Channel with title "{self.kwargs.get("title")}" not found.')
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        logger.error(f'An error occurred while retrieving channel by title: {exc}')
+        return Response({"detail": "Server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
