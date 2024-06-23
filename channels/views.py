@@ -56,6 +56,5 @@ class ChannelDetailByTitle(generics.RetrieveAPIView):
             logger.error(f'Channel with title "{title}" not found.')
             raise Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            logger.error(f'An error occurred: {e}')
+            logger.error(f'An error occurred while retrieving channel by title: {e}')
             raise Response({"detail": "Server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-

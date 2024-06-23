@@ -72,6 +72,7 @@ ALLOWED_HOSTS = [
     '8000-bluiss-pp5apicommunityf-dnnpp9eijo3.ws-eu114.gitpod.io',
     '8080-bluiss-pp5apicommunityf-dnnpp9eijo3.ws-eu114.gitpod.io',
     'localhost',
+    '8000-bluiss-pp5apicommunityf-zney8u9tsd4.ws.codeinstitute-ide.net'
 ]
 
 
