@@ -37,26 +37,4 @@ class ChannelViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         return queryset.order_by(self.request.query_params.get('ordering', '-created_at'))
 
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Channel
-from .serializers import ChannelSerializer
-import logging
-
-logger = logging.getLogger(__name__)
-
-class ChannelDetailByTitle(generics.RetrieveAPIView):
-    serializer_class = ChannelSerializer
-
-    def get_object(self):
-        title = self.kwargs.get("title")
-        logger.debug(f'Received request for channel title: {title}')
-        try:
-            channel = Channel.objects.get(title=title)
-            logger.debug(f'Found channel: {channel}')
-            return channel
-        except Channel.DoesNotExist:
-            logger.error(f'Channel with title "{title}" not found.')
-            raise Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
