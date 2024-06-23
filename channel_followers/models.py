@@ -2,13 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from channels.models import Channel  
 
-
 class ChannelFollower(models.Model):
     """
     ChannelFollower model, related to 'owner' and 'channel'.
-    'owner' is a owner that is following a Channel.
+    'owner' is a user that is following a Channel.
     'channel' is a Channel that is followed by 'owner'.
-    We need the related_name attribute so that django can differentiate.
+    We need the related_name attribute so that django can differentiate
     between 'owner' and 'channel'.
     'unique_together' makes sure a user can't 'double follow' the same channel.
     """
@@ -25,4 +24,4 @@ class ChannelFollower(models.Model):
         unique_together = ['owner', 'channel']
 
     def __str__(self):
-        return f'{self.user.username} follows {self.channel.title}'
+        return f'{self.owner.username} follows {self.channel.title}'
