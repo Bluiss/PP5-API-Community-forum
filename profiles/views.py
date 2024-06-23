@@ -42,15 +42,14 @@ class ProfileList(generics.ListAPIView):
                 following_count=Count('owner__following', distinct=True)
             ).order_by('-created_at')
 
-            # Log the generated queryset SQL
-            logger.debug(f"Generated queryset SQL: {queryset.query}")
+            # Log the success and details of the queryset
+            logger.debug(f"ProfileList queryset generated: {queryset.query}")
 
             return queryset
         except Exception as e:
             # Log any exceptions that occur
             logger.error(f"Error in ProfileList view: {str(e)}")
             raise
-
 
 class ProfileDetail(generics.RetrieveUpdateAPIView):
     """
@@ -70,12 +69,11 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
                 following_count=Count('owner__following', distinct=True)
             ).order_by('-created_at')
 
-            # Log the generated queryset SQL
-            logger.debug(f"Generated queryset SQL: {queryset.query}")
+            # Log the success and details of the queryset
+            logger.debug(f"ProfileDetail queryset generated: {queryset.query}")
 
             return queryset
         except Exception as e:
             # Log any exceptions that occur
             logger.error(f"Error in ProfileDetail view: {str(e)}")
             raise
-
