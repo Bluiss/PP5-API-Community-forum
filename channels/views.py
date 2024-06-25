@@ -1,5 +1,6 @@
 from rest_framework import status, permissions, generics, viewsets
 from rest_framework.response import Response
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from .models import Channel
@@ -43,9 +44,11 @@ class ChannelViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         return queryset.order_by(self.request.query_params.get('ordering', '-created_at'))
 
-class ChannelDetailByTitle(generics.RetrieveAPIView):
+class ChannelDetailByTitle(RetrieveUpdateDestroyAPIView):
+    queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'title'
 
     def get_object(self):
         title = self.kwargs.get("title")
@@ -55,11 +58,10 @@ class ChannelDetailByTitle(generics.RetrieveAPIView):
         return channel
 
     def handle_exception(self, exc):
-        if isinstance(exc, Channel.DoesNotExist):
+        if isinstance(exc, Http404):
             logger.error(f'Channel with title "{self.kwargs.get("title")}" not found.')
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-        logger.error(f'An error occurred while retrieving channel by title: {exc}')
-        return Response({"detail": "Server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return super().handle_exception(exc)
 
 
 class FollowedChannelsView(generics.ListAPIView):
