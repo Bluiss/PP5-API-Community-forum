@@ -1,12 +1,14 @@
+"""
+This module contains the models for the channels application.
+"""
+
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone 
-
-
+from django.utils import timezone
 
 class Channel(models.Model):
     """
-
+    This model represents a channel in the community forum.
     """
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, unique=True)
@@ -20,11 +22,16 @@ class Channel(models.Model):
 
     @property
     def followers_count(self):
+        """
+        Returns the number of followers for the channel.
+        """
         return ChannelFollower.objects.filter(channel=self).count()
 
-
     class Meta:
+        """
+        Meta options for the Channel model.
+        """
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.title
+        return str(self.title)
