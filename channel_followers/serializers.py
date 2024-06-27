@@ -13,7 +13,7 @@ class ChannelFollowerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChannelFollower
-        fields = ['id', 'owner', 'channel', 'created_at']
+        fields = ['id', 'owner', 'channel', 'created_at',]
 
     def create(self, validated_data):
         try:

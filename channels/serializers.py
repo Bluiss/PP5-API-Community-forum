@@ -29,5 +29,5 @@ class ChannelSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'description', 'image',
             'is_owner', 'profile_image', 'owner', 'profile_id',
-            'posts', 'followers_count'
+            'posts', 'followers_count', 'following_id',
         ]
