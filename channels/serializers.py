@@ -2,7 +2,7 @@ from rest_framework import serializers
 from channels.models import Channel
 from posts.models import Post
 from posts.serializers import PostSerializer
-from channel_followers.models import ChannelFollower  # Ensure correct import path
+from channel_followers.models import ChannelFollower
 
 class ChannelSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -11,15 +11,21 @@ class ChannelSerializer(serializers.ModelSerializer):
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     posts = PostSerializer(many=True, read_only=True)  # Assuming posts is a reverse relation
     followers_count = serializers.SerializerMethodField()
-    following_id = serializers.SerializerMethodField()  # Temporarily comment this out
-
+    following_id = serializers.SerializerMethodField()
 
     def get_is_owner(self, obj):
         request = self.context['request']
         return request.user == obj.owner
 
     def get_followers_count(self, obj):
-        return obj.followers.count()  # Correctly return the count of followers
+        return obj.followers.count()
+
+    def get_following_id(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            follower = ChannelFollower.objects.filter(owner=request.user, channel=obj).first()
+            return follower.id if follower else None
+        return None
 
     def create(self, validated_data):
         owner = self.context['request'].user

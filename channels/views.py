@@ -8,6 +8,7 @@ from .serializers import ChannelSerializer
 from rest_framework.filters import OrderingFilter
 import logging
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,6 @@ class ChannelDetailByTitle(RetrieveUpdateDestroyAPIView):
             logger.error(f'Channel with title "{self.kwargs.get("title")}" not found.')
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         return super().handle_exception(exc)
-
 
 class FollowedChannelsView(generics.ListAPIView):
     serializer_class = ChannelSerializer
