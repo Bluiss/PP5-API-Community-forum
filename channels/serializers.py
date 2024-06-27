@@ -11,6 +11,8 @@ class ChannelSerializer(serializers.ModelSerializer):
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     posts = PostSerializer(many=True, read_only=True)  # Assuming posts is a reverse relation
     followers_count = serializers.SerializerMethodField()
+    following_id = serializers.SerializerMethodField()  # Temporarily comment this out
+
 
     def get_is_owner(self, obj):
         request = self.context['request']
