@@ -21,11 +21,21 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('title', models.CharField(max_length=255)),
                 ('description', models.TextField()),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
+                ('created_at', models.DateTimeField(
+                    default=django.utils.timezone.now
+                )),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('image', models.ImageField(blank=True, default='../default_post_rgq6aq', upload_to='images/')),
+                ('image', models.ImageField(
+                    blank=True,
+                    default='../default_post_rgq6aq',
+                    upload_to='images/'
+                )),
                 ('followers_count', models.IntegerField(default=0)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='channels', to=settings.AUTH_USER_MODEL)),
+                ('owner', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='channels',
+                    to=settings.AUTH_USER_MODEL
+                )),
             ],
             options={
                 'ordering': ['-created_at'],

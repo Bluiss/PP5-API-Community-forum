@@ -130,10 +130,14 @@ MIDDLEWARE = [
 #         rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
 #     ]
 
-if 'CLIENT_ORIGIN_DEV' in os.environ:
-    CORS_ALLOWED_ORIGINS = [
-        os.environ.get('CLIENT_ORIGIN_DEV')
-    ]
+# if 'CLIENT_ORIGIN_DEV' in os.environ:
+#     CORS_ALLOWED_ORIGINS = [
+#         os.environ.get('CLIENT_ORIGIN_DEV')
+#     ]
+
+CORS_ALLOWED_ORIGINS = [
+    'https://pp5-react-community-forum-eca09c2c9ca6.herokuapp.com',
+]
 
 CORS_ALLOW_CREDENTIALS = True
 

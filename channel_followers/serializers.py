@@ -1,19 +1,19 @@
 from rest_framework import serializers
 from channel_followers.models import ChannelFollower
-
+from django.db import IntegrityError
 
 
 class ChannelFollowerSerializer(serializers.ModelSerializer):
     """
-    Serializer for the Follower model
-    Create method handles the unique constraint on 'owner' and 'followed'
+    Serializer for the Follower model.
+    Create method handles the unique constraint on 'owner' and 'followed'.
     """
     owner = serializers.ReadOnlyField(source='owner.username')
     channel = serializers.ReadOnlyField(source='channel.title')
 
     class Meta:
         model = ChannelFollower
-        fields = ['id', 'owner', 'channel', 'created_at',]
+        fields = ['id', 'owner', 'channel', 'created_at']
 
     def create(self, validated_data):
         try:

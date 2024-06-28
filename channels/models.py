@@ -1,10 +1,10 @@
 """
 This module contains the models for the channels application.
 """
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+
 
 class Channel(models.Model):
     """
@@ -15,7 +15,8 @@ class Channel(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(User, related_name='channels', on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        User, related_name='channels', on_delete=models.CASCADE)
     image = models.ImageField(
         upload_to='images/', default='../default_post_rgq6aq', blank=True
     )

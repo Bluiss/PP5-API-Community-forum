@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from channels.models import Channel  
+from channels.models import Channel
+
 
 class ChannelFollower(models.Model):
     """
@@ -9,7 +10,8 @@ class ChannelFollower(models.Model):
     'channel' is a Channel that is followed by 'owner'.
     We need the related_name attribute so that django can differentiate
     between 'owner' and 'channel'.
-    'unique_together' makes sure a user can't 'double follow' the same channel.
+    'unique_together' makes sure a user can't 'double follow' the same
+    channel.
     """
     owner = models.ForeignKey(
         User, related_name='channel_following', on_delete=models.CASCADE

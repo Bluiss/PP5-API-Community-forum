@@ -12,28 +12,33 @@ from django.http import Http404
 
 logger = logging.getLogger(__name__)
 
+
 class ChannelList(APIView):
     serializer_class = ChannelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
         channels = Channel.objects.all()
-        serializer = ChannelSerializer(channels, many=True, context={'request': request})
+        serializer = ChannelSerializer(
+            channels, many=True, context={'request': request})
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = ChannelSerializer(data=request.data, context={'request': request})
+        serializer = ChannelSerializer(
+            data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         logger.error(f'Error creating channel: {serializer.errors}')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ChannelDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = 'pk'
+
 
 class ChannelViewSet(viewsets.ModelViewSet):
     queryset = Channel.objects.all()
@@ -43,7 +48,9 @@ class ChannelViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.order_by(self.request.query_params.get('ordering', '-created_at'))
+        return queryset.order_by(
+            self.request.query_params.get('ordering', '-created_at'))
+
 
 class ChannelDetailByTitle(RetrieveUpdateDestroyAPIView):
     queryset = Channel.objects.all()
@@ -60,9 +67,12 @@ class ChannelDetailByTitle(RetrieveUpdateDestroyAPIView):
 
     def handle_exception(self, exc):
         if isinstance(exc, Http404):
-            logger.error(f'Channel with title "{self.kwargs.get("title")}" not found.')
-            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+            logger.error(
+                f'Channel with title "{self.kwargs.get("title")}" not found.')
+            return Response(
+                {"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         return super().handle_exception(exc)
+
 
 class FollowedChannelsView(generics.ListAPIView):
     serializer_class = ChannelSerializer
