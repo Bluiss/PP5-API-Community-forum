@@ -159,6 +159,9 @@ All the features of the deployed API were tested as part of testing/acceptance c
 
 #### Python validation
 
+All python was validated with the CI Python Linter & the pycodestyle tool to ensure pep8 validation.
+![python valid](phythonvalid.png)
+
 ### Deployment
 
 The Threadly API is deployed to Heroku, using an ElephantSQL Postgres database. To duplicate deployment to Heroku, follow these steps:
