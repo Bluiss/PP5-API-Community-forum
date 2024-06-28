@@ -2,7 +2,7 @@ import logging
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.db import models  
+from django.db import models
 from .models import Vote
 from .serializers import VoteSerializer
 from posts.models import Post
@@ -22,11 +22,18 @@ class VoteViewSet(viewsets.ModelViewSet):
 
         try:
             post = Post.objects.get(id=data['post'])
+            logger.debug(f"Post found with ID: {data['post']}")
         except Post.DoesNotExist:
             logger.error(f"Post not found with ID: {data['post']}")
             return Response({"detail": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        vote_type = data.get('vote_type')
+        try:
+            vote_type = int(data.get('vote_type'))
+            logger.debug(f"Vote type received: {vote_type} (type: {type(vote_type)})")
+        except (TypeError, ValueError) as e:
+            logger.error(f"Invalid vote type: {data.get('vote_type')} - Error: {e}")
+            return Response({"detail": "Invalid vote type."}, status=status.HTTP_400_BAD_REQUEST)
+
         if vote_type not in [1, -1]:
             logger.error(f"Invalid vote type: {vote_type}")
             return Response({"detail": "Invalid vote type."}, status=status.HTTP_400_BAD_REQUEST)
