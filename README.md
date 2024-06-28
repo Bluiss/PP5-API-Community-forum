@@ -27,6 +27,8 @@ Threadly is designed to allow users to post, comment, follow, vote & like conten
 
 ## Planning
 
+![Data Schema](/readmeimg/pp5schema.png)
+
 ### Data models
 
 | Entity              | Attributes                                                                                                                                     | Relationships                                                                                                                                                      |
@@ -160,7 +162,7 @@ All the features of the deployed API were tested as part of testing/acceptance c
 #### Python validation
 
 All python was validated with the CI Python Linter & the pycodestyle tool to ensure pep8 validation.
-![python valid](phythonvalid.png)
+![python valid](/readmeimg/phythonvalid.png)
 
 ### Deployment
 
