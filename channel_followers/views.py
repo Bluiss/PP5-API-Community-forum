@@ -1,4 +1,4 @@
-from rest_framework import generics, status, permissions
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from channels.models import Channel
@@ -20,12 +20,14 @@ class FollowChannelView(APIView):
             )
             if created:
                 logger.debug(
-                    f'User {request.user.username} followed channel {channel.title}'
+                    f'User {request.user.username} '
+                    f'followed channel {channel.title}'
                 )
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 logger.debug(
-                    f'User {request.user.username} already follows channel {channel.title}'
+                    f'User {request.user.username} '
+                    f'already follows channel {channel.title}'
                 )
                 return Response(
                     {'detail': 'Already following'},
@@ -49,7 +51,8 @@ class UnfollowChannelView(APIView):
                 owner=request.user, channel=channel
             ).delete()
             logger.debug(
-                f'User {request.user.username} unfollowed channel {channel.title}'
+                f'User {request.user.username} '
+                f'unfollowed channel {channel.title}'
             )
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
